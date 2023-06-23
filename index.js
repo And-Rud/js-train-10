@@ -63,13 +63,11 @@ console.log(
  * Повертаємо - Об'єкт, створений з записів з обробленими значеннями.
  */
 function customObjectFromEntries(entries) {
-  console.log(entries.map((x) => x[0][0]));
   if (Array.isArray(entries)) {
-    return entries.map((item, index) =>
-      item[0][index] !== "number"
-        ? [item[0], item[0].toString()]
-        : [item[0], item[1]]
+    let res = entries.map(([key, value]) =>
+      typeof key === "number" ? [key, `${key}`] : [key, value]
     );
+    return Object.fromEntries(res);
   } else {
     return `Помилка: Вхідний аргумент має бути масивом.`;
   }
@@ -297,12 +295,13 @@ function convertArrayToObj(arr) {
   if (Array.isArray(arr)) {
     let obj = {};
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i] == arr[i + 1]) {
-        console.log(`У масиві є дубльований ключ: ${arr[i + 1]}`);
-        delete arr[i + 1];
+      let [key, value] = arr[i];
+      if (key === arr[i][i]) {
+        console.log(`У масиві є дубльований ключ: [${arr[i]}]`);
+        arr.splice(arr[i], 1);
       }
     }
-    return arr;
+    return Object.fromEntries(arr.sort());
   } else {
     return {};
   }
